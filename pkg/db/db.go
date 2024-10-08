@@ -33,7 +33,7 @@ func (db DB) ReceiveWeatherDataFromDB(date string, hour int, city string) model.
 
 	var weather_records model.WeatherDataForDay
 
-	_, err := db.conn.Query(&weather_records, fmt.Sprintf("SELECT * FROM weather_records WHERE timestamp::date='%s' and city='%s';", date, city))
+	_, err := db.conn.Query(&weather_records.WeatherDataForTheDay, fmt.Sprintf("SELECT * FROM weather_records WHERE timestamp::date='%s' and city='%s';", date, city))
 	ErrorPrinting(err)
 	//db.conn.Close()
 
