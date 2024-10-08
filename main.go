@@ -39,13 +39,17 @@ func main() {
 	citynumbers := api.GetCityData(city, CityAPIKey)
 	date := CreateDate(year, month, day)
 
-	var weather_records []model.Weather_record
+	var weather_records model.WeatherDataForDay
 	weather_records = db.ReceiveWeatherDataFromDB(date, hour, city)
-	if len(weather_records) == 0 {
-		api.GetWeatherDataFromAPI(date, hour, citynumbers)
-	} else {
-		output.PrintWeather(weather_records, hour)
+
+	if len(weather_records.WeatherDataForTheDay) == 0 {
+		weather_records = api.GetWeatherDataFromAPI(date, hour, citynumbers)
+		db.InsertDataToDB(weather_records, citynumbers)
+		//output.SaveWeatherDataAsJSON() instead of body, a struct
+
 	}
+
+	output.PrintWeather(weather_records, hour)
 
 	//GetWeatherDataFromAPI(year, month, day, hour)
 

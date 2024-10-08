@@ -15,8 +15,6 @@ import (
 const CityAPIURL string = "http://api.openweathermap.org/geo/1.0/direct"
 const WeatherAPIURL string = "https://api.brightsky.dev/weather"
 
-var weather model.WeatherDataForDay
-
 // a function that takes city name, API key as input, gets latitude, longitude data using API and gives a struct with city name, city latitude, city longitude as output
 func GetCityData(city string, CityAPIKey string) []model.CityData {
 
@@ -50,7 +48,9 @@ func GetCityData(city string, CityAPIKey string) []model.CityData {
 
 }
 
-func GetWeatherDataFromAPI(date string, hour int, citynumbers []model.CityData) {
+func GetWeatherDataFromAPI(date string, hour int, citynumbers []model.CityData) model.WeatherDataForDay {
+
+	var weather model.WeatherDataForDay
 
 	result, err := url.Parse(WeatherAPIURL)
 	ErrorPrinting(err)
@@ -74,11 +74,13 @@ func GetWeatherDataFromAPI(date string, hour int, citynumbers []model.CityData) 
 	ErrorPrinting(err)
 
 	// check if array is empty
-	if len(weather.WeatherDataForHour) == 0 {
+	if len(weather.WeatherDataForTheDay) == 0 {
 		log.Fatal("array is empty")
-	} else if len(weather.WeatherDataForHour)-1 < hour { // check if array element exists
+	} else if len(weather.WeatherDataForTheDay)-1 < hour { // check if array element exists
 		log.Fatal("weather data for this hour is not to be found in the array")
 	}
+
+	return weather
 
 }
 

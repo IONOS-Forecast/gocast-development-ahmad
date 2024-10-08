@@ -28,7 +28,7 @@ type Weather_record struct {
 }
 
 type WeatherDataForDay struct {
-	WeatherDataForHour []Weather_record `json:"weather"`
+	WeatherDataForTheDay []Weather_record `json:"weather"`
 }
 
 // a struct for city information

@@ -29,13 +29,13 @@ func ConnectToDB(user, password, dbname string, addr string) DB {
 }
 
 // a function that gets date, hour, city name as input and return a struct with weather information for that city, date and hour as output
-func (db DB) ReceiveWeatherDataFromDB(date string, hour int, city string) []model.Weather_record {
+func (db DB) ReceiveWeatherDataFromDB(date string, hour int, city string) model.WeatherDataForDay {
 
-	var weather_records []model.Weather_record
+	var weather_records model.WeatherDataForDay
 
 	_, err := db.conn.Query(&weather_records, fmt.Sprintf("SELECT * FROM weather_records WHERE timestamp::date='%s' and city='%s';", date, city))
 	ErrorPrinting(err)
-	db.conn.Close()
+	//db.conn.Close()
 
 	return weather_records
 }
@@ -83,7 +83,7 @@ func (db DB) SaveCitiesAsJSON() {
 }
 
 // a function that takes a struct of weather information for 25 hours (each hour in a specific day and the first hour of the next day) and a strcut of city information (name, latitude, longitude) and inserts the 24 hour data for that specific day into the database
-func (db DB) InsertDataToDB(WeatherInfo []model.Weather_record, citynumbers []model.CityData) {
+func (db DB) InsertDataToDB(WeatherInfo model.WeatherDataForDay, citynumbers []model.CityData) {
 
 	var count int
 	_, err := db.conn.QueryOne(pg.Scan(&count), "SELECT COUNT(id) AS count FROM weather_records;")
@@ -91,11 +91,11 @@ func (db DB) InsertDataToDB(WeatherInfo []model.Weather_record, citynumbers []mo
 
 	db.CheckIfCityExistsInDB(citynumbers)
 
-	for i := 0; i < len(WeatherInfo) && i <= 23; i++ {
+	for i := 0; i < len(WeatherInfo.WeatherDataForTheDay) && i <= 23; i++ {
 		count++
-		WeatherInfo[i].City = strings.ToLower(citynumbers[0].Name)
-		WeatherInfo[i].ID = count
-		_, err = db.conn.Model(&WeatherInfo[i]).Where("timestamp=?", WeatherInfo[i].TimeStamp).Where("city=?", WeatherInfo[i].City).SelectOrInsert()
+		WeatherInfo.WeatherDataForTheDay[i].City = strings.ToLower(citynumbers[0].Name)
+		WeatherInfo.WeatherDataForTheDay[i].ID = count
+		_, err = db.conn.Model(&WeatherInfo.WeatherDataForTheDay[i]).Where("timestamp=?", WeatherInfo.WeatherDataForTheDay[i].TimeStamp).Where("city=?", WeatherInfo.WeatherDataForTheDay[i].City).SelectOrInsert()
 		ErrorPrinting(err)
 	}
 

@@ -10,27 +10,27 @@ import (
 )
 
 // a function that takes weather information for each hour in a specific day as a struct and prints out the weather information for a specific hour
-func PrintWeather(WeatherInfo []model.Weather_record, hour int) {
+func PrintWeather(WeatherInfo model.WeatherDataForDay, hour int) {
 
 	//fmt.Println("\033[2J")
-	fmt.Printf("time:					%.16v\n", WeatherInfo[hour].TimeStamp)
-	fmt.Printf("condition:				%s\n", WeatherInfo[hour].Condition)
-	fmt.Printf("temperature:				%.1f\n", WeatherInfo[hour].Temperature)
-	fmt.Printf("wind speed:				%.1f\n", WeatherInfo[hour].WindSpeed)
-	fmt.Printf("wind direction:				%d\n", WeatherInfo[hour].WindDirection)
-	fmt.Printf("wind gust speed:			%.1f\n", WeatherInfo[hour].WindGustSpeed)
-	fmt.Printf("wind gust direction:			%d\n", WeatherInfo[hour].WindGustDirection)
-	fmt.Printf("relative humidity:			%d\n", WeatherInfo[hour].RelativeHumidity)
-	fmt.Printf("dew point:				%.1f\n", WeatherInfo[hour].DewPoint)
-	fmt.Printf("precipitation probability:		%.1f\n", WeatherInfo[hour].PrecipitationProbability)
-	fmt.Printf("precipitation probability 6h:		%.1f\n", WeatherInfo[hour].PrecipitationProbability6h)
-	fmt.Printf("visibility:				%d\n", WeatherInfo[hour].Visibility)
-	fmt.Printf("pressure in MSL:			%.1f\n", WeatherInfo[hour].PressureMsl)
-	fmt.Printf("cloud cover:				%.2f\n", WeatherInfo[hour].CloudCover)
-	fmt.Printf("sunshine:				%.0f\n", WeatherInfo[hour].Sunshine)
-	fmt.Printf("solar:					%.3f\n", WeatherInfo[hour].Solar)
-	fmt.Printf("general:				%s\n", WeatherInfo[hour].Icon)
-	fmt.Printf("precipitation:				%.1f\n", WeatherInfo[hour].Precipitation)
+	fmt.Printf("time:					%.16v\n", WeatherInfo.WeatherDataForTheDay[hour].TimeStamp)
+	fmt.Printf("condition:				%s\n", WeatherInfo.WeatherDataForTheDay[hour].Condition)
+	fmt.Printf("temperature:				%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].Temperature)
+	fmt.Printf("wind speed:				%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].WindSpeed)
+	fmt.Printf("wind direction:				%d\n", WeatherInfo.WeatherDataForTheDay[hour].WindDirection)
+	fmt.Printf("wind gust speed:			%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].WindGustSpeed)
+	fmt.Printf("wind gust direction:			%d\n", WeatherInfo.WeatherDataForTheDay[hour].WindGustDirection)
+	fmt.Printf("relative humidity:			%d\n", WeatherInfo.WeatherDataForTheDay[hour].RelativeHumidity)
+	fmt.Printf("dew point:				%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].DewPoint)
+	fmt.Printf("precipitation probability:		%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].PrecipitationProbability)
+	fmt.Printf("precipitation probability 6h:		%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].PrecipitationProbability6h)
+	fmt.Printf("visibility:				%d\n", WeatherInfo.WeatherDataForTheDay[hour].Visibility)
+	fmt.Printf("pressure in MSL:			%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].PressureMsl)
+	fmt.Printf("cloud cover:				%.2f\n", WeatherInfo.WeatherDataForTheDay[hour].CloudCover)
+	fmt.Printf("sunshine:				%.0f\n", WeatherInfo.WeatherDataForTheDay[hour].Sunshine)
+	fmt.Printf("solar:					%.3f\n", WeatherInfo.WeatherDataForTheDay[hour].Solar)
+	fmt.Printf("general:				%s\n", WeatherInfo.WeatherDataForTheDay[hour].Icon)
+	fmt.Printf("precipitation:				%.1f\n", WeatherInfo.WeatherDataForTheDay[hour].Precipitation)
 
 }
 
