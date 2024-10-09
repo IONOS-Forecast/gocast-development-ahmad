@@ -29,7 +29,7 @@ func ConnectToDB(user, password, dbname string, addr string) DB {
 }
 
 // a function that gets date, hour, city name as input and return a struct with weather information for that city, date and hour as output
-func (db DB) ReceiveWeatherDataFromDB(date string, hour int, city string) model.WeatherDataForDay {
+func (db DB) ReceiveWeatherDataFromDB(date string, city string) model.WeatherDataForDay {
 
 	var weather_records model.WeatherDataForDay
 
@@ -41,7 +41,7 @@ func (db DB) ReceiveWeatherDataFromDB(date string, hour int, city string) model.
 }
 
 // a function that gets city name, city latitude and city longitude as a strcut and checks if this city is in the database, if not the city information (name, latitude, longitude) will be inserted into the database
-func (db DB) CheckIfCityExistsInDB(citynumbers []model.CityData) {
+func (db DB) CheckIfCityExistsInDBElseInsert(citynumbers []model.CityData) {
 
 	var cityexists bool
 	_, err := db.conn.QueryOne(pg.Scan(&cityexists), "SELECT COUNT(name) AS citycounter FROM cities WHERE name=?", citynumbers[0].Name)
@@ -89,7 +89,7 @@ func (db DB) InsertDataToDB(WeatherInfo model.WeatherDataForDay, citynumbers []m
 	_, err := db.conn.QueryOne(pg.Scan(&count), "SELECT COUNT(id) AS count FROM weather_records;")
 	ErrorPrinting(err)
 
-	db.CheckIfCityExistsInDB(citynumbers)
+	db.CheckIfCityExistsInDBElseInsert(citynumbers)
 
 	for i := 0; i < len(WeatherInfo.WeatherDataForTheDay) && i <= 23; i++ {
 		count++
@@ -99,6 +99,15 @@ func (db DB) InsertDataToDB(WeatherInfo model.WeatherDataForDay, citynumbers []m
 		ErrorPrinting(err)
 	}
 
+}
+
+func (db DB) CheckIfCityExistsInDB(city string) bool {
+
+	var cityexists bool
+	_, err := db.conn.QueryOne(pg.Scan(&cityexists), "SELECT COUNT(name) AS citycounter FROM cities WHERE name=?", city)
+	ErrorPrinting(err)
+
+	return cityexists
 }
 
 // a function that prints errors
