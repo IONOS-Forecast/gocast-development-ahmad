@@ -1,9 +1,9 @@
 package server
 
 import (
-	"math/rand"
 	"time"
 
+	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/model"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -42,91 +42,65 @@ func FirstMetric(reg prometheus.Registerer) {
 	reg.MustRegister(Pressure)
 }
 
-func UpdateMetrics() {
-	city := "Berlin"
-	now := time.Now().Format(time.RFC3339)
-	temp := 100 * rand.Float64()
+func UpdateMetrics(weather model.WeatherDataForDay, hour int) {
+
+	city := weather.WeatherDataForTheDay[hour].City
+	now := weather.WeatherDataForTheDay[hour].TimeStamp.Format(time.RFC3339)
+	temp := weather.WeatherDataForTheDay[hour].Temperature
+
 	Temperature.With(prometheus.Labels{
 		"location":  city,
 		"timestamp": now,
 	}).Set(temp)
 
-	hum := 140 * rand.Float64()
+	hum := float64(weather.WeatherDataForTheDay[hour].RelativeHumidity)
 	Humidity.With(prometheus.Labels{
 		"location":  city,
 		"timestamp": now,
 	}).Set(hum)
 
-	speed := 1400 * rand.Float64()
+	speed := weather.WeatherDataForTheDay[hour].WindSpeed
 	WindSpeed.With(prometheus.Labels{
 		"location":  city,
 		"timestamp": now,
 	}).Set(speed)
 
-	pressure := 2200 * rand.Float64()
+	pressure := weather.WeatherDataForTheDay[hour].PressureMsl
 	Pressure.With(prometheus.Labels{
 		"location":  city,
 		"timestamp": now,
 	}).Set(pressure)
 }
 
-/*
+func UpdateMetricsNow(weather model.WeatherDataForDay) {
+	now := time.Now()
+	hour := now.Hour()
 
-func NewMetrics(reg prometheus.Registerer) *model.FirstMetricStruct {
-	m = &model.FirstMetricStruct{
-		Temperature: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "temperature",
-			Help:      "Temperature of each city",
-		}, []string{"location", "timestamp"}),
-		Humidity: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "humidity",
-			Help:      "Humidity of each city",
-		}, []string{"location", "timestamp"}),
-		Windspeed: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "wind_speed",
-			Help:      "Wind speed of each city",
-		}, []string{"location", "timestamp"}),
-		Pressure: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "pressure",
-			Help:      "Pressure of each city",
-		}, []string{"location", "timestamp"}),
-	}
-	reg.MustRegister(m.Temperature)
-	reg.MustRegister(m.Humidity)
-	reg.MustRegister(m.Windspeed)
-	reg.MustRegister(m.Pressure)
-	return m
+	city := weather.WeatherDataForTheDay[hour].City
+	timestamp := now.Format(time.RFC3339)
+	temp := weather.WeatherDataForTheDay[hour].Temperature
+
+	Temperature.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": timestamp,
+	}).Set(temp)
+
+	hum := float64(weather.WeatherDataForTheDay[hour].RelativeHumidity)
+	Humidity.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": timestamp,
+	}).Set(hum)
+
+	speed := weather.WeatherDataForTheDay[hour].WindSpeed
+	WindSpeed.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": timestamp,
+	}).Set(speed)
+
+	pressure := weather.WeatherDataForTheDay[hour].PressureMsl
+	Pressure.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": timestamp,
+	}).Set(pressure)
+
 }
-
-func RegisterMetrics(record model.WeatherRecord, hour int) {
-	if len(record.Hours) != 0 {
-		m.Temperature.With(prometheus.Labels{"location": record.Hours[hour].City, "timestamp": record.Hours[hour].TimeStamp}).Set(record.Hours[hour].Temperature)
-		m.Humidity.With(prometheus.Labels{"location": record.Hours[hour].City, "timestamp": record.Hours[hour].TimeStamp}).Set(float64(record.Hours[hour].RelativeHumidity))
-		m.Windspeed.With(prometheus.Labels{"location": record.Hours[hour].City, "timestamp": record.Hours[hour].TimeStamp}).Set(record.Hours[hour].WindSpeed)
-		m.Pressure.With(prometheus.Labels{"location": record.Hours[hour].City, "timestamp": record.Hours[hour].TimeStamp}).Set(record.Hours[hour].PressureMSL)
-	}
-}
-
-func RegisterDayMetrics(record model.WeatherRecord) {
-	if len(record.Hours) != 0 {
-		for i := 0; i < len(record.Hours); i++ {
-			m.Temperature.With(prometheus.Labels{"location": record.Hours[i].City, "timestamp": record.Hours[i].TimeStamp}).Set(record.Hours[i].Temperature)
-			m.Humidity.With(prometheus.Labels{"location": record.Hours[i].City, "timestamp": record.Hours[i].TimeStamp}).Set(float64(record.Hours[i].RelativeHumidity))
-			m.Windspeed.With(prometheus.Labels{"location": record.Hours[i].City, "timestamp": record.Hours[i].TimeStamp}).Set(record.Hours[i].WindSpeed)
-			m.Pressure.With(prometheus.Labels{"location": record.Hours[i].City, "timestamp": record.Hours[i].TimeStamp}).Set(record.Hours[i].PressureMSL)
-		}
-	}
-}
-
-func getMetrics() *model.FirstMetricStruct {
-	if m != nil {
-		return m
-	}
-	return nil
-}
-
-*/

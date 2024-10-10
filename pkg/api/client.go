@@ -48,7 +48,7 @@ func GetCityData(city string, CityAPIKey string) []model.CityData {
 
 }
 
-func GetWeatherDataFromAPI(date string, hour int, citynumbers []model.CityData) model.WeatherDataForDay {
+func GetWeatherDataFromAPI(date string, citynumbers []model.CityData) model.WeatherDataForDay {
 
 	var weather model.WeatherDataForDay
 
@@ -76,9 +76,9 @@ func GetWeatherDataFromAPI(date string, hour int, citynumbers []model.CityData) 
 	// check if array is empty
 	if len(weather.WeatherDataForTheDay) == 0 {
 		log.Fatal("array is empty")
-	} else if len(weather.WeatherDataForTheDay)-1 < hour { // check if array element exists
+	} /*else if len(weather.WeatherDataForTheDay)-1 < hour { // check if array element exists
 		log.Fatal("weather data for this hour is not to be found in the array")
-	}
+	}*/
 
 	return weather
 
