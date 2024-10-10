@@ -13,9 +13,9 @@ import (
 	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/db"
 	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/model"
 	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/output"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -54,16 +54,18 @@ func main() {
 	}
 
 	output.PrintWeather(weather_records, hour)
-
+	//
+	reg := prometheus.NewRegistry()                                 // does nothing
+	server.FirstMetric(reg)                                         //register global variables in the registry above
+	promHandler := promhttp.HandlerFor(reg, promhttp.HandlerOpts{}) // does nothing, expose the global variables humudity etc..
+	pMux := http.NewServeMux()
+	pMux.Handle("/metrics", promHandler)
+	//
 	http.HandleFunc("/", h.Handler)
-	http.HandleFunc("/metrics", promhttp.Handler().ServeHTTP)
-	http.ListenAndServe(":8080", nil)
+	//http.HandleFunc("/metrics", promhttp.Handler().ServeHTTP)
+	//	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8081", pMux)
 
-	//GetWeatherDataFromAPI(year, month, day, hour)
-
-	//	time.Sleep(time.Second * time.Duration(n_minutes))
-
-	//}
 }
 
 // a function that returns a formatted date (yyyy-mm-dd) as a string using the input year, month, day

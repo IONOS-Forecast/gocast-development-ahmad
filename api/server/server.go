@@ -63,9 +63,6 @@ func (h *Handler) Handler(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-//func (h *Handler) Metrics(w http.ResponseWriter, req *http.Request) {
-//}
-
 // a function that prints errors
 func ErrorPrinting(err error) {
 	if err != nil {
