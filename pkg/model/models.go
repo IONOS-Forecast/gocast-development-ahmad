@@ -2,8 +2,7 @@ package model
 
 import (
 	"time"
-
-	"github.com/prometheus/client_golang/prometheus"
+	//"github.com/prometheus/client_golang/prometheus"
 )
 
 // a struct for weather information
@@ -40,11 +39,4 @@ type CityData struct {
 	Name string  `json:"name"`
 	Lat  float64 `json:"lat"`
 	Lon  float64 `json:"lon"`
-}
-
-type FirstMetricStruct struct {
-	Temperature *prometheus.GaugeVec
-	Humidity    *prometheus.GaugeVec
-	Windspeed   *prometheus.GaugeVec
-	Pressure    *prometheus.GaugeVec
 }
