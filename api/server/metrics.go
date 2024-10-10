@@ -1,53 +1,73 @@
 package server
 
 import (
-	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/model"
+	"math/rand"
+	"time"
+
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var m *model.FirstMetricStruct
+var (
+	Temperature *prometheus.GaugeVec
+	Humidity    *prometheus.GaugeVec
+	WindSpeed   *prometheus.GaugeVec
+	Pressure    *prometheus.GaugeVec
+)
 
-func FirstMetric(reg prometheus.Registerer) *model.FirstMetricStruct {
-	m := &model.FirstMetricStruct{
-		Temperature: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "temperature",
-			Help:      "Temperature of each city",
-		}, []string{"location", "timestamp"}),
-		Humidity: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "humidity",
-			Help:      "Humidity of each city",
-		}, []string{"location", "timestamp"}),
-		Windspeed: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "wind_speed",
-			Help:      "Wind speed of each city",
-		}, []string{"location", "timestamp"}),
-		Pressure: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: "gocast",
-			Name:      "pressure",
-			Help:      "Pressure of each city",
-		}, []string{"location", "timestamp"}),
-	}
-	reg.MustRegister(m.Temperature)
-	reg.MustRegister(m.Humidity)
-	reg.MustRegister(m.Windspeed)
-	reg.MustRegister(m.Pressure)
-	return m
+func FirstMetric(reg prometheus.Registerer) {
+	Temperature = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "gocast",
+		Name:      "temperature",
+		Help:      "Temperature of each city",
+	}, []string{"location", "timestamp"})
+	Humidity = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "gocast",
+		Name:      "humidity",
+		Help:      "Humidity of each city",
+	}, []string{"location", "timestamp"})
+	WindSpeed = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "gocast",
+		Name:      "wind_speed",
+		Help:      "Wind speed of each city",
+	}, []string{"location", "timestamp"})
+	Pressure = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "gocast",
+		Name:      "pressure",
+		Help:      "Pressure of each city",
+	}, []string{"location", "timestamp"})
+
+	reg.MustRegister(Temperature)
+	reg.MustRegister(Humidity)
+	reg.MustRegister(WindSpeed)
+	reg.MustRegister(Pressure)
 }
 
-func RegisterFirstMetric(bla model.WeatherDataForDay) {
+func UpdateMetrics() {
+	city := "Berlin"
+	now := time.Now().Format(time.RFC3339)
+	temp := 100 * rand.Float64()
+	Temperature.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": now,
+	}).Set(temp)
 
-	layout := "2006-01-02 15:04:05-07"
+	hum := 140 * rand.Float64()
+	Humidity.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": now,
+	}).Set(hum)
 
-	for i := 0; i < len(bla.WeatherDataForTheDay); i++ {
-		m.Temperature.With(prometheus.Labels{"location": bla.WeatherDataForTheDay[i].City, "timestamp": bla.WeatherDataForTheDay[i].TimeStamp.Format(layout)}).Set(bla.WeatherDataForTheDay[i].Temperature)
-		m.Humidity.With(prometheus.Labels{"location": bla.WeatherDataForTheDay[i].City, "timestamp": bla.WeatherDataForTheDay[i].TimeStamp.Format(layout)}).Set(float64(bla.WeatherDataForTheDay[i].RelativeHumidity))
-		m.Windspeed.With(prometheus.Labels{"location": bla.WeatherDataForTheDay[i].City, "timestamp": bla.WeatherDataForTheDay[i].TimeStamp.Format(layout)}).Set(bla.WeatherDataForTheDay[i].WindSpeed)
-		m.Pressure.With(prometheus.Labels{"location": bla.WeatherDataForTheDay[i].City, "timestamp": bla.WeatherDataForTheDay[i].TimeStamp.Format(layout)}).Set(bla.WeatherDataForTheDay[i].PressureMsl)
-	}
+	speed := 1400 * rand.Float64()
+	WindSpeed.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": now,
+	}).Set(speed)
 
+	pressure := 2200 * rand.Float64()
+	Pressure.With(prometheus.Labels{
+		"location":  city,
+		"timestamp": now,
+	}).Set(pressure)
 }
 
 /*
