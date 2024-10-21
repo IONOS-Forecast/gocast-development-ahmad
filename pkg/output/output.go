@@ -1,6 +1,7 @@
 package output
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -35,9 +36,11 @@ func PrintWeather(WeatherInfo model.WeatherDataForDay, hour int) {
 }
 
 // a function that takes year, month, day, body from REST API response, city information as struct and saves those weather information for the specific day as JSON in resources/weather_records/ with the city name, date and sometimes year in the filename
-func SaveWeatherDataAsJSON(year int, month int, day int, body []byte, citynumbers []model.CityData) {
+func SaveWeatherDataAsJSON(date string, weather_records model.WeatherDataForDay, citynumbers []model.CityData) {
 
 	var FileName string
+
+	var day, month, year = DateParse(date)
 
 	if year == time.Now().Year() {
 		FileName = fmt.Sprintf(citynumbers[0].Name+"_%.2d-%.2d-orig.json", day, month)
@@ -45,15 +48,30 @@ func SaveWeatherDataAsJSON(year int, month int, day int, body []byte, citynumber
 		FileName = fmt.Sprintf(citynumbers[0].Name+"_%.2d-%.2d-%d-orig.json", day, month, year)
 	}
 
-	err := os.MkdirAll("resources/weather_records/", os.ModePerm) // leon
-	ErrorPrinting(err)                                            // leon
+	data, err := json.Marshal(weather_records)
+	if err != nil {
+		ErrorPrinting(err)
+	}
+
+	err = os.MkdirAll("resources/weather_records/", os.ModePerm) // leon
+	ErrorPrinting(err)                                           // leon
 
 	file, err := os.Create("resources/weather_records/" + FileName)
 	ErrorPrinting(err)
 
-	file.Write(body)
+	file.Write(data)
 	file.Close()
 
+}
+
+func DateParse(dateS string) (day int, month int, year int) {
+	date, err := time.Parse("2006-01-02", dateS)
+
+	if err != nil {
+		ErrorPrinting(err)
+	}
+
+	return date.Day(), int(date.Month()), date.Year()
 }
 
 // a function that prints errors
