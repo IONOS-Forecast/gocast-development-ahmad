@@ -38,6 +38,7 @@ var dateParseStructs = []struct {
 	{"9999-11-11", 11, 11, 9999},
 	{"2101-03-15", 15, 3, 2101},
 	{"2052-02-29", 29, 2, 2052}, // Leap year case
+	// {"2222-02-29", 29, 2, 2222}, // not a leap year, you can uncomment it to test if it will be detected
 }
 
 func TestPateParse(t *testing.T) {
