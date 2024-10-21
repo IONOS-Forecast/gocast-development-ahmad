@@ -2,7 +2,6 @@ package model
 
 import (
 	"time"
-	//"github.com/prometheus/client_golang/prometheus"
 )
 
 // a struct for weather information
