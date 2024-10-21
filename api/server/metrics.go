@@ -42,7 +42,7 @@ func FirstMetric(reg prometheus.Registerer) {
 	reg.MustRegister(Pressure)
 }
 
-func UpdateMetrics(weather model.WeatherDataForDay, hour int) {
+func SetValueFirstMetric(weather model.WeatherDataForDay, hour int) {
 
 	city := weather.WeatherDataForTheDay[hour].City
 	now := weather.WeatherDataForTheDay[hour].TimeStamp.Format(time.RFC3339)
@@ -72,7 +72,7 @@ func UpdateMetrics(weather model.WeatherDataForDay, hour int) {
 	}).Set(pressure)
 }
 
-func UpdateMetricsNow(weather model.WeatherDataForDay) {
+func SetValueFirstMetricNow(weather model.WeatherDataForDay) {
 	now := time.Now()
 	hour := now.Hour()
 
