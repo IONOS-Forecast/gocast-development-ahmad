@@ -48,8 +48,7 @@ func main() {
 	if len(weather_records.WeatherDataForTheDay) == 0 {
 		weather_records = api.GetWeatherDataFromAPI(date, citynumbers)
 		db.InsertDataToDB(weather_records, citynumbers)
-		//output.SaveWeatherDataAsJSON() instead of body, a struct
-
+		output.SaveWeatherDataAsJSON(date, weather_records, citynumbers)
 	}
 
 	output.PrintWeather(weather_records, hour)
@@ -58,13 +57,13 @@ func main() {
 	server.FirstMetric(reg)         //register global variables in the registry above
 
 	go func() {
-		c := time.NewTicker(1 * time.Second)
+		c := time.NewTicker(1 * time.Hour)
 		for {
 			select {
 			case <-c.C:
 				now := time.Now().Format("2006-01-02")
 				weather_records = api.GetWeatherDataFromAPI(now, citynumbers)
-				server.UpdateMetricsNow(weather_records)
+				server.SetValueFirstMetricNow(weather_records)
 			}
 		}
 	}()
