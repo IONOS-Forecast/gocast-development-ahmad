@@ -11,3 +11,8 @@ startdb:
 
 stopdb:
 	@docker stop forecastDB || exit 0
+test:
+	cd api/server && go test -v
+	cd pkg/api && go test -v
+	cd pkg/output && go test -v
+	
