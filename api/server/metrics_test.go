@@ -189,7 +189,7 @@ var timestamps = []string{
 	"2052-02-29T00:00:00Z",
 }
 
-func TestBla(t *testing.T) {
+func TestMetrics(t *testing.T) {
 
 	fmt.Println("ew") // add whatever so a new test can be started
 
