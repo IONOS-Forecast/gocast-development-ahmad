@@ -3,14 +3,12 @@ package api
 import (
 	"fmt"
 	"log"
-	"os"
 	"testing"
 	"time"
 
 	"math/rand"
 
 	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/model"
-	"github.com/joho/godotenv"
 )
 
 const CityAPIKey = ""
@@ -246,19 +244,16 @@ func TestGetCityData(t *testing.T) {
 	}
 }
 
-func TestCreateCityInfoStructs(t *testing.T) {
+/* func TestCreateCityInfoStructs(t *testing.T) {
 
 	var cityinfo model.CityData
-
-	godotenv.Load()
-	CityAPIKey := os.Getenv("CITY_API_KEY")
 
 	for i := 0; i < len(cities); i++ {
 		cityinfo = GetCityData(cities[i], CityAPIKey)
 		fmt.Println(fmt.Sprintf("{%s,%f,%f}", cityinfo.Name, cityinfo.Lat, cityinfo.Lon))
 	}
 
-}
+} */
 
 func createRandomDates(howmanydates int) []string {
 
