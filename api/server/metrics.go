@@ -5,6 +5,7 @@ import (
 
 	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/model"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 )
 
 var (
@@ -40,35 +41,38 @@ func FirstMetric(reg prometheus.Registerer) {
 	reg.MustRegister(Humidity)
 	reg.MustRegister(WindSpeed)
 	reg.MustRegister(Pressure)
+	reg.MustRegister(collectors.NewBuildInfoCollector())
+	reg.MustRegister(collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
+	reg.MustRegister(collectors.NewGoCollector())
 }
 
 func SetValueFirstMetric(weather model.WeatherDataForDay, hour int) {
 
 	city := weather.WeatherDataForTheDay[hour].City
-	now := weather.WeatherDataForTheDay[hour].TimeStamp.Format(time.RFC3339)
+	time := weather.WeatherDataForTheDay[hour].TimeStamp.Format(time.RFC3339)
 	temp := weather.WeatherDataForTheDay[hour].Temperature
 
 	Temperature.With(prometheus.Labels{
 		"location":  city,
-		"timestamp": now,
+		"timestamp": time,
 	}).Set(temp)
 
 	hum := float64(weather.WeatherDataForTheDay[hour].RelativeHumidity)
 	Humidity.With(prometheus.Labels{
 		"location":  city,
-		"timestamp": now,
+		"timestamp": time,
 	}).Set(hum)
 
 	speed := weather.WeatherDataForTheDay[hour].WindSpeed
 	WindSpeed.With(prometheus.Labels{
 		"location":  city,
-		"timestamp": now,
+		"timestamp": time,
 	}).Set(speed)
 
 	pressure := weather.WeatherDataForTheDay[hour].PressureMsl
 	Pressure.With(prometheus.Labels{
 		"location":  city,
-		"timestamp": now,
+		"timestamp": time,
 	}).Set(pressure)
 }
 

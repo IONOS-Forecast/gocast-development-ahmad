@@ -57,11 +57,11 @@ func main() {
 	server.FirstMetric(reg)         //register global variables in the registry above
 
 	go func() {
-		c := time.NewTicker(1 * time.Hour)
+		c := time.NewTicker(1 * time.Second)
 		for {
 			select {
 			case <-c.C:
-				now := time.Now().Format("2006-01-02")
+				now := time.Now().Format(time.RFC3339)
 				weather_records = api.GetWeatherDataFromAPI(now, citynumbers)
 				server.SetValueFirstMetricNow(weather_records)
 			}

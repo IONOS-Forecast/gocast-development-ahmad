@@ -16,10 +16,11 @@ const CityAPIURL string = "http://api.openweathermap.org/geo/1.0/direct"
 const WeatherAPIURL string = "https://api.brightsky.dev/weather"
 
 // a function that takes city name, API key as input, gets latitude, longitude data using API and gives a struct with city name, city latitude, city longitude as output
-func GetCityData(city string, CityAPIKey string) []model.CityData {
+func GetCityData(city string, CityAPIKey string) model.CityData {
 
 	// start trying
-	citynumbers := []model.CityData{}
+	var citynumbers model.CityData
+	temp := []model.CityData{}
 
 	result, err := url.Parse(CityAPIURL)
 	ErrorPrinting(err)
@@ -39,16 +40,18 @@ func GetCityData(city string, CityAPIKey string) []model.CityData {
 	body, err := io.ReadAll(resp.Body)
 	ErrorPrinting(err)
 
-	err = json.Unmarshal(body, &citynumbers)
+	err = json.Unmarshal(body, &temp)
 	ErrorPrinting(err)
 
-	citynumbers[0].Name = strings.ToLower(citynumbers[0].Name)
+	citynumbers.Name = strings.ToLower(temp[0].Name)
+	citynumbers.Lat = temp[0].Lat
+	citynumbers.Lon = temp[0].Lon
 
 	return citynumbers
 
 }
 
-func GetWeatherDataFromAPI(date string, citynumbers []model.CityData) model.WeatherDataForDay {
+func GetWeatherDataFromAPI(date string, citydata model.CityData) model.WeatherDataForDay {
 
 	var weather model.WeatherDataForDay
 
@@ -56,8 +59,8 @@ func GetWeatherDataFromAPI(date string, citynumbers []model.CityData) model.Weat
 	ErrorPrinting(err)
 
 	queries := result.Query()
-	queries.Add("lat", strconv.FormatFloat(citynumbers[0].Lat, 'f', -1, 64))
-	queries.Add("lon", strconv.FormatFloat(citynumbers[0].Lon, 'f', -1, 64))
+	queries.Add("lat", strconv.FormatFloat(citydata.Lat, 'f', -1, 64))
+	queries.Add("lon", strconv.FormatFloat(citydata.Lon, 'f', -1, 64))
 	queries.Add("date", date)
 
 	result.RawQuery = queries.Encode()

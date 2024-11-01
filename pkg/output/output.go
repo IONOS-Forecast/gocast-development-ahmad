@@ -36,16 +36,16 @@ func PrintWeather(WeatherInfo model.WeatherDataForDay, hour int) {
 }
 
 // a function that takes year, month, day, body from REST API response, city information as struct and saves those weather information for the specific day as JSON in resources/weather_records/ with the city name, date and sometimes year in the filename
-func SaveWeatherDataAsJSON(date string, weather_records model.WeatherDataForDay, citynumbers []model.CityData) {
+func SaveWeatherDataAsJSON(date string, weather_records model.WeatherDataForDay, citynumbers model.CityData) {
 
 	var FileName string
 
 	var day, month, year = DateParse(date)
 
 	if year == time.Now().Year() {
-		FileName = fmt.Sprintf(citynumbers[0].Name+"_%.2d-%.2d-orig.json", day, month)
+		FileName = fmt.Sprintf(citynumbers.Name+"_%.2d-%.2d-orig.json", day, month)
 	} else {
-		FileName = fmt.Sprintf(citynumbers[0].Name+"_%.2d-%.2d-%d-orig.json", day, month, year)
+		FileName = fmt.Sprintf(citynumbers.Name+"_%.2d-%.2d-%d-orig.json", day, month, year)
 	}
 
 	data, err := json.Marshal(weather_records)

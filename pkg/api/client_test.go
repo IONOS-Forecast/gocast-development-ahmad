@@ -11,7 +11,7 @@ import (
 	"github.com/IONOS-Forecast/gocast-development-ahmad/pkg/model"
 )
 
-const CityAPIKey = ""
+const CityAPIKey = "0932fe6abb5063cff80d0e97d54458c9"
 
 var GetWeatherDataFromAPIStructs = []struct {
 	name                     string

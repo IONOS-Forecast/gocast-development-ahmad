@@ -1,7 +1,6 @@
-- add cities to resources/pg/data/cities.csv and check the file resources/pg/init/init.sql that runs it
 - make comments
-
-- ask what are fixtures ? - done!
-- ask what is the purpose of convert.sh, why do we need to convert data from csv into JSON, does this help us keeping the data persistent ? - done!
-- is model a common directory for structs ? - done!
-- rename function names - done!
+- change one sec to one hour in main
+- is there a way to optimize function getMetrics, its so unoptimal
+- metrics_test.go update
+- upload testing path
+- ask Maxim why sometimes with testing server_test I get connection refused
