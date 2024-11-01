@@ -26,7 +26,6 @@ A weather application built with goloang. The application only works for cities 
 |-|`MONTH`|-|month of the desired weather record|
 |-|`YEAR`|-|year of the desired weather record|
 |-|`N_MINUTES`|-|how often the weather data should be called in minutes (disabled)|
-|-|``|-||
 ---
 screenshots
 ---
